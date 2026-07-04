@@ -1,1 +1,331 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamphaeng Phet - One Day Trip</title>
+    
+    <!-- นำเข้าฟอนต์: Playfair สำหรับอังกฤษ (สไตล์นิตยสาร), Pridi สำหรับพาดหัวไทย, Sarabun สำหรับเนื้อหา -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Pridi:wght@400;700&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #0a2e1f; /* สีเขียวเข้มแบบป่าทรอปิคอล */
+            --accent-orange: #d96c06; /* สีส้มอมทอง */
+            --bg-cream: #f4f0e6;      /* สีครีมกระดาษวินเทจ */
+            --text-dark: #222222;
+        }
+        
+        body {
+            background-color: var(--bg-cream);
+            /* ใส่เทกเจอร์กระดาษบางๆ ให้ดูเหมือนหนังสือนิตยสาร */
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); 
+            font-family: 'Sarabun', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
 
+        /* ---------------- Hero Section (หน้าปก) ---------------- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* เพิ่มกรอบเส้นบางๆ รอบหน้าจอ สไตล์หน้าปกนิตยสาร */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 25px; left: 25px; right: 25px; bottom: 25px;
+            border: 1px solid rgba(10, 46, 31, 0.3);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ตัวหนังสือเล็กๆ เกริ่นนำด้านบน */
+        .hero-sup {
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 5px;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* พาดหัวหลัก Mini Tour */
+        .hero-main {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 700;
+            color: var(--accent-orange);
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin: 0;
+            text-shadow: 4px 4px 0px rgba(10, 46, 31, 0.05);
+        }
+
+        /* ชื่อจังหวัด */
+        .hero-location {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            color: var(--primary-green);
+            line-height: 1;
+            margin-top: -5px;
+            text-transform: uppercase;
+        }
+
+        /* เส้นคั่นและคำว่า One Day Trip */
+        .hero-sub {
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 8px;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            margin-top: 40px;
+            border-top: 1px solid var(--primary-green);
+            border-bottom: 1px solid var(--primary-green);
+            padding: 12px 0;
+            display: inline-block;
+        }
+
+        /* กิมมิกเล็กๆ ด้านบนมุมซ้ายขวา */
+        .hero-top-left, .hero-top-right {
+            position: absolute;
+            top: 45px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.85rem;
+            color: var(--primary-green);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .hero-top-left { left: 45px; }
+        .hero-top-right { right: 45px; }
+
+        /* ---------------- Magazine Layout (ส่วนเนื้อหา) ---------------- */
+        .magazine-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 20px 100px 20px;
+        }
+        
+        .story-block {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 18vh; /* เว้นช่องไฟให้ดูโปร่ง */
+            position: relative;
+        }
+        
+        /* สลับซ้าย-ขวา */
+        .story-block:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        /* ลายน้ำตัวเลขใหญ่ๆ ด้านหลัง */
+        .watermark-num {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: 18rem;
+            color: rgba(10, 46, 31, 0.04);
+            top: -100px;
+            left: -40px;
+            z-index: 0;
+            line-height: 1;
+            user-select: none;
+        }
+        .story-block:nth-child(even) .watermark-num {
+            left: auto;
+            right: -40px;
+        }
+
+        /* ส่วนรูปภาพ */
+        .image-col {
+            flex: 1 1 50%;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .img-frame {
+            width: 100%;
+            height: 550px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 25px 25px 0px rgba(10, 46, 31, 0.9); /* เงาแข็งสไตล์เรโทร */
+            transition: transform 0.4s ease;
+        }
+        
+        .img-frame:hover {
+            transform: scale(1.02);
+        }
+
+        /* ส่วนข้อความ (เลเยอร์ทับรูปภาพ) */
+        .text-col {
+            flex: 1 1 40%;
+            padding: 50px;
+            z-index: 3;
+            background: rgba(244, 240, 230, 0.95); /* สีครีมโปร่งแสงนิดๆ */
+            border: 1px solid rgba(10, 46, 31, 0.1);
+        }
+        
+        /* เทคนิค Overlap ดึงกล่องข้อความมาเกยทับรูปภาพ */
+        .story-block:nth-child(odd) .text-col {
+            margin-left: -12%;
+            margin-top: 50px;
+        }
+        .story-block:nth-child(even) .text-col {
+            margin-right: -12%;
+            margin-top: 50px;
+            text-align: right;
+        }
+
+        .loc-type {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-orange);
+            font-size: 1.1rem;
+            font-style: italic;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .loc-title {
+            font-family: 'Pridi', serif;
+            color: var(--primary-green);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+        
+        .loc-desc {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #4a4a4a;
+            margin-bottom: 35px;
+        }
+        
+        /* ปุ่มสไตล์มินิมอลคลาสสิก */
+        .btn-vintage {
+            display: inline-block;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 12px 35px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+        
+        .btn-vintage:hover {
+            background: var(--primary-green);
+            color: var(--bg-cream);
+        }
+
+        /* ---------------- Map Section (แผนที่ด้านล่าง) ---------------- */
+        .map-wrapper {
+            padding: 100px 20px;
+            background-color: var(--primary-green);
+            color: var(--bg-cream);
+            text-align: center;
+        }
+        
+        .map-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+        
+        .map-box {
+            max-width: 1000px;
+            margin: 40px auto 0 auto;
+            border: 2px solid var(--accent-orange);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            padding: 10px;
+            background: var(--bg-cream);
+        }
+
+        /* รองรับหน้าจอมือถือ */
+        @media (max-width: 768px) {
+            .story-block { flex-direction: column !important; margin-bottom: 10vh; }
+            .img-frame { height: 400px; box-shadow: 15px 15px 0px rgba(10, 46, 31, 0.9); }
+            .text-col { margin: -50px 15px 0 15px !important; padding: 30px; text-align: left !important; }
+            .watermark-num { font-size: 10rem; top: -50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section หน้าปก -->
+    <div class="hero">
+        <!-- กิมมิกตัวหนังสือมุมจอ -->
+        <div class="hero-top-left">Vol. 01</div>
+        <div class="hero-top-right">Est. 2026</div>
+        
+        <div class="hero-content">
+            <span class="hero-sup">The Ultimate Guide</span>
+            <h1 class="hero-main">MINI TOUR</h1>
+            <h2 class="hero-location">Kamphaeng Phet</h2>
+            <div class="hero-sub">One Day Trip</div>
+        </div>
+    </div>
+
+    <!-- Magazine Section เลื่อนดูทีละสถานที่ -->
+    <div class="magazine-section">
+        {% for place in locations %}
+        <div class="story-block">
+            <!-- สร้างลายน้ำตัวเลข 01, 02 อัตโนมัติด้วย loop.index -->
+            <div class="watermark-num">0{{ loop.index }}</div>
+            
+            <div class="image-col">
+                <img src="{{ place.image }}" alt="{{ place.name }}" class="img-frame">
+            </div>
+            
+            <div class="text-col">
+                <!-- ดึงเฉพาะข้อความด้านหลังเครื่องหมาย : มาโชว์ (เช่น ดึงคำว่า "ที่พัก") -->
+                <span class="loc-type">{{ place.type.split(':')[1] }}</span>
+                <h2 class="loc-title">{{ place.name }}</h2>
+                <p class="loc-desc">{{ place.desc }}</p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination={{ place.lat }},{{ place.lon }}" target="_blank" class="btn-vintage">
+                    Explore Route
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Map Section แผนที่รวมด้านล่างสุด -->
+    <div class="map-wrapper">
+        <h2 class="map-title">Journey Map</h2>
+        <p style="font-size: 1.1rem; opacity: 0.8; font-weight: 300;">แผนที่สรุปพิกัดการเดินทางทั้งหมด</p>
+        <div class="map-box">
+            <!-- ดึงแผนที่จาก Python มาฝังตรงนี้ -->
+            {{ map|safe }}
+        </div>
+    </div>
+
+</body>
+</html>
