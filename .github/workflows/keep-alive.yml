@@ -1,1 +1,14 @@
+name: Keep Render Alive
 
+on:
+  schedule:
+    # ยิงทุกๆ 14 นาที
+    - cron: '*/14 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render URL
+        # เปลี่ยน URL ด้านล่างให้เป็นชื่อเว็บ Render ของคุณ
+        run: curl -s https://mini-tour.onrender.com> /dev/null
