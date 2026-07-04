@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import folium
-from folium.plugins import MiniMap, Fullscreen, MousePosition
+from folium.plugins import MiniMap, Fullscreen, MousePosition, BeautifyIcon
 
 app = Flask(__name__)
 
@@ -77,8 +77,8 @@ def index():
 
     points = []
     
-    # 2. วนลูปปักหมุด
-    for place in locations:
+    # 2. วนลูปปักหมุด (เปลี่ยนมาใช้ enumerate เพื่อนับเลขลำดับ)
+    for index, place in enumerate(locations):
         points.append([place["lat"], place["lon"]])
         
         # ปรับสีฟอนต์ในป๊อปอัปให้เข้ากับธีมวินเทจ
@@ -93,7 +93,15 @@ def index():
             [place["lat"], place["lon"]],
             popup=folium.Popup(popup_html, max_width=300),
             tooltip=place["name"],
-            icon=folium.Icon(color=place["color"], icon="info-sign")
+            # เปลี่ยนจาก folium.Icon เดิม มาเป็น BeautifyIcon เพื่อใส่ตัวเลข
+            icon=BeautifyIcon(
+                icon_shape='marker',
+                number=index + 1,                # ดึงลำดับที่ 1, 2, 3... มาแสดง
+                background_color=place["color"], # ใช้สีพื้นหลังตามจุดนั้นๆ
+                text_color='white',              # สีตัวเลขเป็นสีขาว
+                border_color='white',            # สีกรอบขอบหมุดเป็นสีขาว
+                border_width=2                   # ความหนาของกรอบหมุด
+            )
         ).add_to(m)
 
     # 3. วาดเส้นเชื่อมต่อ (เปลี่ยนเป็นสีเขียวเข้มให้เข้ากับธีมเว็บ)
